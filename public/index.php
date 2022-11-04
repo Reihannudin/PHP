@@ -3,15 +3,17 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Reedb\PhpMvc\APP\Router;
-use Reedb\PhpMvc\Controllers\ProductController;
 use Reedb\PhpMvc\Controllers\HomeController;
-use Reedb\PhpMvc\Middleware\AuthMiddleware;
+use Reedb\PhpMvc\Controllers\UserController;
+use Reedb\PhpMvc\Middleware\MustLoginMiddleware;
+use Reedb\PhpMvc\Middleware\MustNotLoginMiddleware;
 
-Router::add('GET' , '/products/([0-9a-zA-Z]*)/categories/([0-9a-zA-Z]*)' , ProductController::class , 'categories');
 
-Router::add('GET' , '/' , HomeController::class , 'index');
-Router::add('GET' , '/hello' , HomeController::class , 'hello' , [AuthMiddleware::class]);
-Router::add('GET' , '/world' , HomeController::class , 'world' , [AuthMiddleware::class]);
-Router::add('GET' , '/about' , HomeController::class , 'about');
+Router::add('GET' , '/' , HomeController::class , 'index' , []);
+Router::add('GET' , '/users/register' , UserController::class , 'register' , [MustNotLoginMiddleware::class]);
+Router::add('POST' , '/users/register' , UserController::class , 'postRegister' , [MustNotLoginMiddleware::class]);
+Router::add('GET' , '/users/login' , UserController::class , 'login' , [MustNotLoginMiddleware::class]);
+Router::add('POST' , '/users/login' , UserController::class , 'postLogin', [MustNotLoginMiddleware::class]);
+Router::add('GET' , '/users/logout' , UserController::class , 'logout', [MustLoginMiddleware::class]);
 
 Router::run();

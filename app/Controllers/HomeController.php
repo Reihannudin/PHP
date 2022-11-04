@@ -3,46 +3,42 @@
 namespace Reedb\PhpMvc\Controllers;
 
 use Reedb\PhpMvc\App\View;
+use Reedb\PhpMvc\Config\Database;
+use Reedb\PhpMvc\Domain\User;
+use Reedb\PhpMvc\Repository\SessionRepository;
+use Reedb\PhpMvc\Repository\UserRepository;
+use Reedb\PhpMvc\Service\SessionService;
 
-class HomeController{
+class HomeController
+{
+    private SessionService $sessionService;
 
-    function index() : void{
-        $model = [
-            "title" => "Belajar PHP MVC" ,
-            "content" => "Selamat Belajar PHP MVC"
-        ];
-
-        View::render('Home/index'  , $model);
-    }
-
-    function hello(): void
+    /**
+     * @param SessionService $sessionService
+     */
+    public function __construct()
     {
-        echo "HomeController.hello()";
+        $connection = Database::getConnection();
+        $sessionRepository = new SessionRepository($connection);
+        $userRepository = new UserRepository($connection);
+        $this->sessionService = new SessionService($sessionRepository , $userRepository);
     }
 
-    function world(): void
+
+    function index(): void
     {
-        echo "HomeController.world()";
+        $user = $this->sessionService->current();
+        if ($user == null){
+            View::render('Home/index' , [
+                "title" => "PHP Login Management"
+            ]);
+        } else {
+            View::render('Home/dashboard',[
+                "title" => "Dashboard",
+                "user" => [
+                    "name" => $user->username
+                ]
+            ]);
+        }
     }
-
-    function about(): void
-    {
-        echo "Author : Andrian Raihnnudin";
-    }
-
-    function login() : void{
-        $request = [
-            "username" => $_POST['username'] ,
-            "password" => $_POST['password']
-        ];
-
-        $user = [
-
-        ];
-
-        $response = [
-            "message" => "Login success"
-        ];
-    }
-
 }
