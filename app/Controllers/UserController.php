@@ -80,76 +80,75 @@ class UserController{
         $this->sessionService->destroy();
         View::redirect("/");
     }
+
+    public function updateProfile(){
+        $user = $this->sessionService->current();
+
+        View::render('User/profile' , [
+            "title" => "Update user profile" ,
+            "user" => [
+                "email" => $user->email,
+                "username" => $user->username
+            ]
+        ]);
+    }
+
+    public function postUpdateProfile(){
+
+        $user = $this->sessionService->current();
+
+        $request = new UserProfileUpdateRequest();
+        $request->email = $user->email;
+        $request->username = $_POST['username'];
+
+        try{
+            $this->userService->updateProfile($request);
+            View::redirect('/');
+        } catch (ValidationException $exception){
+            View::render('User/profile', [
+                "title" => "Update user profile",
+                "error" => $exception->getMessage(),
+                "user" => [
+                    "email" => $user->email,
+                    "username" => $_POST['username']
+                ]
+            ]);
+        }
+
+    }
 //
-//    public function updateProfile(){
-//        $user = $this->sessionService->current();
-//
-//        View::render('User/profile' , [
-//            "title" => "Update user profile" ,
-//            "user" => [
-//                "id" => $user->id,
-//                "name" => $user->username
-//            ]
-//        ]);
-//    }
-//
-//    public function postUpdateProfile(){
-//
-//        $user = $this->sessionService->current();
-//
-//        $request = new UserProfileUpdateRequest();
-//        $request->email = $user->username;
-//        $request->username = $_POST['username'];
-//
-//        try{
-//            $this->userService->updateProfile($request);
-//            View::redirect('/');
-//        } catch (ValidationException $exception){
-//            View::render('User/profile', [
-//                "title" => "Update user profile",
-//                "error" => $exception->getMessage(),
-//                "user" => [
-//                    "email" => $user->email,
-//                    "username" => $_POST['username']
-//                ]
-//            ]);
-//        }
-//
-//    }
-//
-//
-//    public function updatePassword()
-//    {
-//        $user = $this->sessionService->current();
-//        View::render('User/password', [
-//            "title" => "Update user password",
-//            "user" => [
-//                "email" => $user->email
-//            ]
-//        ]);
-//    }
-//
-//    public function postUpdatePassword(){
-//        $user = $this->sessionService->current();
-//        $request = new UserPasswordUpdateRequest();
-//        $request->email = $user->email;
-//        $request->oldPassword = $_POST['oldPassword'];
-//        $request->newPassword = $_POST['newPassword'];
-//
-//        try{
-//            $this->userService->updatePassword($request);
-//            View::redirect('/');
-//        } catch (ValidationException $exception){
-//            View::render('User/password', [
-//                "title" => "Update user password",
-//                "error" => $exception->getMessage(),
-//                "user" => [
-//                    "email" => $user->email
-//                ]
-//            ]);
-//        }
-//
-//    }
+    public function updatePassword()
+    {
+        $user = $this->sessionService->current();
+        View::render('User/password', [
+            "title" => "Update user password",
+            "user" => [
+                "email" => $user->email
+            ]
+        ]);
+    }
+
+    public function postUpdatePassword(){
+        $user = $this->sessionService->current();
+        $request = new UserPasswordUpdateRequest();
+        $request->email = $user->email;
+        $request->oldPassword = $_POST['oldPassword'];
+        $request->newPassword = $_POST['newPassword'];
+
+        try{
+            $this->userService->updatePassword($request);
+            View::redirect('/');
+        } catch (ValidationException $exception){
+            View::render('User/password', [
+                "title" => "Update user password",
+                "error" => $exception->getMessage(),
+                "user" => [
+                    "email" => $user->email
+                ]
+            ]);
+        }
+
+    }
 
 }
 

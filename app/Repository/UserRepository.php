@@ -20,6 +20,14 @@ class UserRepository{
         return $user;
     }
 
+    public function update(User $user) : User{
+        $statement = $this->connection->prepare("update user set username = ?  , password = ? where email = ?");
+        $statement->execute(
+            [$user->username , $user->password , $user->email]
+        );
+        return $user;
+    }
+
     public function findLoginByEmail(string $email) : ?User{
         $statement = $this->connection->prepare("select  password, email from user where email = ?");
         $statement->execute([$email]);
