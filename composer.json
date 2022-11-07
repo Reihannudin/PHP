@@ -1,6 +1,6 @@
 {
     "name": "reedb/php-mvc",
-    "description": "Learn php mvc",
+    "description": "This is project clone McDonald's website build with PHP and Mysql",
     "type": "project",
     "autoload": {
         "psr-4": {

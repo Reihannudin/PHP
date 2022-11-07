@@ -1,6 +1,6 @@
 <?php
 
-namespace Reedb\PhpMvc\APP;
+namespace Reedb\PhpMvc\App;
 
 class Router {
 
