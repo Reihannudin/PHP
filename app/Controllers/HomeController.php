@@ -14,7 +14,7 @@ class HomeController
             "content" => "Welcome to Starter pack McDonald's Web App"
         ];
 
-        View::render('Home/index', $model);
+        View::render('Home/home', $model);
     }
 
 }
